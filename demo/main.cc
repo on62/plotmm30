@@ -8,14 +8,17 @@
  * modify it under the terms of the LGPL
  *****************************************************************************/
 
-#include "plot.h"
-#include "scalediv.h"
-#include "curve.h"
-#include "errorcurve.h"
-#include "symbol.h"
-#include "paint.h"
-#include "rectangle.h"
-
+// #include "point.h"
+// #include "size.h"
+// #include "rect.h"
+// #include "plot.h"
+// #include "scalediv.h"
+// #include "curve.h"
+// #include "errorcurve.h"
+// #include "symbol.h"
+// #include "paint.h"
+// #include "rectangle.h"
+#include "plotmm.h"
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/button.h>
 

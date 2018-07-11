@@ -44,7 +44,7 @@ namespace PlotMM {
 			     const std::vector<double> &yData,
 			     const std::vector<double> &xErr,
 			     const std::vector<double> &yErr);
-	virtual void set_data(const Glib::ArrayHandle<DoublePoint> &data);
+	virtual void set_data(const Glib::ArrayHandle<Point<double>> &data);
 
 	inline double dx(int i) const;
 	inline double dy(int i) const;

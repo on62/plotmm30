@@ -44,7 +44,7 @@ namespace PlotMM {
 
       void unreference() const {if (! --_counter) delete this;
 #ifdef DEBUG
-        else is_valid();
+        else is_valid();mm ObjectBasemm ObjectBasemm ObjectBase
 #endif
       };
 

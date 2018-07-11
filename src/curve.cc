@@ -11,10 +11,11 @@
 
 //#include <gdkmm/drawable.h>
 
+#include "plotmm.h"
 #include "doubleintmap.h"
-#include  "curve.h"
-#include "paint.h"
-#include "supplemental.h"
+// #include  "curve.h"
+// #include "paint.h"
+// #include "supplemental.h"
 
 using namespace PlotMM;
 
@@ -191,11 +192,11 @@ void Curve::set_data(const std::vector<double> &xData,
 
   @todo test if this method really works
 */
-void Curve::set_data(const Glib::ArrayHandle<DoublePoint> &data)
+void Curve::set_data(const Glib::ArrayHandle<Point<double>> &data)
 {
     x_.clear();
     y_.clear();
-    Glib::ArrayHandle<DoublePoint>::const_iterator daPnt(data.begin());
+    Glib::ArrayHandle<Point<double>>::const_iterator daPnt(data.begin());
     for (daPnt= data.begin(); daPnt!=data.end(); ++daPnt) {
 	x_.push_back((*daPnt).get_x());
 	y_.push_back((*daPnt).get_y());
@@ -225,13 +226,13 @@ const Glib::ustring &Curve::title() const
 /*!
   Returns the bounding rectangle of the curve data. If there is
   no bounding rect, like for empty data the rectangle is invalid:
-  DoubleRect.is_valid() == FALSE
+  Rect<double>.is_valid() == FALSE
 */
 
-DoubleRect Curve::bounding_rect() const
+Rect<double> Curve::bounding_rect() const
 {
     if ( (x_.size()==0) || (x_.size()!=y_.size()) )
-        return DoubleRect(1.0, -1.0, 1.0, -1.0); // invalid
+        return Rect<double>(1.0, -1.0, 1.0, -1.0); // invalid
 
     const size_t sz = x_.size();
 
@@ -256,7 +257,7 @@ DoubleRect Curve::bounding_rect() const
         if ( yv > maxY )
             maxY = yv;
     }
-    return DoubleRect(minX, maxX, minY, maxY);
+    return Rect<double>(minX, maxX, minY, maxY);
 }
 
 /*!

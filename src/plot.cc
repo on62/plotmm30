@@ -486,7 +486,7 @@ bool Plot::reset_autoscale()
 	    if (!cv->second.curve->enabled()) continue;
 	    PlotAxisID xaxis= cv->second.xaxis;
 	    PlotAxisID yaxis= cv->second.yaxis;
-	    DoubleRect br= cv->second.curve->bounding_rect();
+	    Rect<double> br= cv->second.curve->bounding_rect();
 	    tickMark_[xaxis]->autoscale(br.get_x1(),br.get_x2());
 	    tickMark_[yaxis]->autoscale(br.get_y1(),br.get_y2());
 	}

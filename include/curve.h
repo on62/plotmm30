@@ -22,12 +22,21 @@
 #include <glibmm/arrayhandle.h>
 #include <glibmm/ustring.h>
 
+//#include "symbol.h"
+//#include "point.h"
+//#include "doublerect.h"
+#include "point.h"
+#include "size.h"
+#include "rect.h"
+#include "plot.h"
+#include "scalediv.h"
 #include "symbol.h"
-#include "doublerect.h"
+#include "paint.h"
+#include "rectangle.h"
 
-namespace Gtk {
+//namespace Gtk {
   //  class Drawable;
-}
+//}
 
 namespace PlotMM {
 
@@ -106,7 +115,7 @@ namespace PlotMM {
           int size);
       virtual void set_data(const std::vector<double> &xData,
           const std::vector<double> &yData);
-      virtual void set_data(const Glib::ArrayHandle<DoublePoint> &data);
+      virtual void set_data(const Glib::ArrayHandle<Point<double>> &data);
 
       virtual int data_size() const;
 
@@ -128,7 +137,7 @@ namespace PlotMM {
         return y_[i];     
       }
 
-      virtual DoubleRect bounding_rect() const;
+      virtual Rect<double> bounding_rect() const;
 
       inline double min_x_value() const { return bounding_rect().get_x1(); }
       inline double max_x_value() const { return bounding_rect().get_x2(); }

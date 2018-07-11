@@ -153,7 +153,7 @@ void ErrorCurve::set_data(const std::vector<double> &xData,
 
   @todo test if this method really works
 */
-void ErrorCurve::set_data(const Glib::ArrayHandle<DoublePoint> &data)
+void ErrorCurve::set_data(const Glib::ArrayHandle<Point<double>> &data)
 {
     dx_.clear();
     dy_.clear();
