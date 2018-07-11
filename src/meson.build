@@ -3,7 +3,6 @@ pkg_mod = import('pkgconfig')
 plotmm_sources = files(
   'curve.cc',
   'doubleintmap.cc',
-  'doublerect.cc',
   'rect.cc',
   'errorcurve.cc',
   'paint.cc',
