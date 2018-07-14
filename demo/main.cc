@@ -18,6 +18,7 @@
 // #include "symbol.h"
 // #include "paint.h"
 // #include "rectangle.h"
+#include <iostream>
 #include "plotmm.h"
 #include <gtkmm/checkbutton.h>
 #include <gtkmm/button.h>
@@ -31,7 +32,7 @@
 
 #include <gtkmm/window.h>
 #include <gtkmm/main.h>
-
+#include <cmath>
 #include <iostream>
 
 class PlotTest : public Gtk::Window
@@ -45,11 +46,6 @@ class PlotTest : public Gtk::Window
     bool on_m_press(GdkEventButton*);
     bool on_m_release(GdkEventButton*);
     bool on_m_move(GdkEventMotion*); 
-    //void on_plot_mouse_press(int x,int y, GdkEventButton *ev);
-
-    //void on_plot_mouse_release(int x,int y, GdkEventButton *ev);
-
-    //void on_plot_mouse_move(int x,int y, GdkEventMotion *ev);
 
     void print_coords(int x, int y);
     Glib::RefPtr<PlotMM::Curve> myCurve1;
@@ -73,6 +69,7 @@ class PlotTest : public Gtk::Window
 
   protected:
 
+    int mx_,my_;
     double x1_range_begin;
     double x1_range_end;
     bool x1_autoscale;
@@ -86,56 +83,49 @@ class PlotTest : public Gtk::Window
     double y2_range_end;
     bool y2_autoscale;
 
-    //virtual bool 	on_event (GdkEvent* event);
     void on_draw_clicked();
 
     PlotMM::Rectangle zoomRect_;
     bool button_[3];
-    int mx_,my_;
+
     // Child widgets
     Gtk::Button m_Button_Draw, m_Button_Replot;
     Gtk::VBox m_box_top, m_box0, m_box1;
-    //Gtk::Frame frame1;
     Gtk::Table table;
 
     Gtk::Statusbar m_sb;
 
-    Glib::RefPtr<PlotMM::ErrorCurve> myCurve0;
+    Glib::RefPtr<PlotMM::ErrorCurve> errCurve;
 
     Glib::RefPtr<PlotMM::Curve> myCurve2;
     //  Glib::RefPtr<PlotMM::Curve> myCurve3;
     //  Glib::RefPtr<PlotMM::Curve> myCurve4;
 
     int loop;
-    int cs;
 };
 
 PlotTest::PlotTest() :
   mx_(-1000),my_(-1000),
-  x1_range_begin(0),
-  x1_range_end(1200),
-  x1_autoscale(false),
-  x2_range_begin(0),
-  x2_range_end(20),
+  x1_range_begin(0.0),
+  x1_range_end(360.0),
+  x1_autoscale(true),
+  x2_range_begin(0.0),
+  x2_range_end(360.0),
   x2_autoscale(false),
-  y1_range_begin(0),
-  y1_range_end(600),
-  y1_autoscale(false),
-  y2_range_begin(0),
-  y2_range_end(600),
-  y2_autoscale(false),
+  y1_range_begin(-1.2),
+  y1_range_end(1.2),
+  y1_autoscale(true),
+  y2_range_begin(-0.25),
+  y2_range_end(0.25),
+  y2_autoscale(true),
   m_sb(),
   m_plot(),
-  loop(0),
   m_Button_Draw("Draw Cairo Image"),
-  m_Button_Replot("Call Replot")
-
+  m_Button_Replot("Call Replot"),
+  loop(0)
 {
 
   add(m_box_top);
-
-  //  m_box1.pack_start(m_Button_Draw);
-  //  m_box1.pack_start(m_Button_Replot);
 
   m_box1.pack_start(m_plot, Gtk::PACK_EXPAND_WIDGET, 5);
   m_plot.set_size_request(300, 300);
@@ -155,23 +145,19 @@ PlotTest::PlotTest() :
   m_plot.canvas()->signal_button_press_event().connect(sigc::mem_fun(*this,&PlotTest::on_m_press));
   m_plot.canvas()->signal_button_release_event().connect(sigc::mem_fun(*this,&PlotTest::on_m_release));
   m_plot.canvas()->signal_motion_notify_event().connect(sigc::mem_fun(*this,&PlotTest::on_m_move));
-  //m_plot.signal_plot_mouse_press().
-  //  connect(sigc::mem_fun(*this,&PlotTest::on_plot_mouse_press));
-  //m_plot.signal_plot_mouse_release().
-  //  connect(sigc::mem_fun(*this,&PlotTest::on_plot_mouse_release));
-  //m_plot.signal_plot_mouse_move().
-  //  connect(sigc::mem_fun(*this,&PlotTest::on_plot_mouse_move));
 
   // set some axes to linear and others to logarithmic scale
   m_plot.scale(PlotMM::AXIS_BOTTOM)->set_range(x1_range_begin,x1_range_end,x1_autoscale);
   m_plot.scale(PlotMM::AXIS_TOP)->set_range(x2_range_begin,x2_range_end,x2_autoscale);
   m_plot.scale(PlotMM::AXIS_LEFT)->set_range(y1_range_begin,y1_range_end,y1_autoscale);
   m_plot.scale(PlotMM::AXIS_RIGHT)->set_range(y2_range_begin,y2_range_end,y2_autoscale);
+
   // allow for autoscaling on all axes
   m_plot.scale(PlotMM::AXIS_TOP)->set_autoscale(false);
   //  m_plot.scale(PlotMM::AXIS_RIGHT)->set_autoscale(true);
   m_plot.scale(PlotMM::AXIS_BOTTOM)->set_autoscale(false);
   m_plot.scale(PlotMM::AXIS_LEFT)->set_autoscale(false);
+
   // set a plot title and some axis labels
   m_plot.title()->set_text("Plot");
   m_plot.title()->set_enabled(true);
@@ -190,8 +176,7 @@ PlotTest::PlotTest() :
 
 
   // create some named curves with different colors and symbols //
-  myCurve0 = Glib::RefPtr<PlotMM::ErrorCurve>(new PlotMM::ErrorCurve("c1"));
-  // myCurve0= Glib::RefPtr<PlotMM::Curve>(new PlotMM::Curve("c1"));
+  errCurve = Glib::RefPtr<PlotMM::ErrorCurve>(new PlotMM::ErrorCurve("c1"));
 
   myCurve1= Glib::RefPtr<PlotMM::Curve>(new PlotMM::Curve("c2"));
   myCurve2= Glib::RefPtr<PlotMM::Curve>(new PlotMM::Curve("c3"));
@@ -200,8 +185,8 @@ PlotTest::PlotTest() :
   myCurve1->set_curve_style(PlotMM::CURVE_LINES);
   myCurve1->paint()->set_pen_color(Gdk::Color("blue"));
 
-  //m_plot.add_curve(myCurve0);
-  //m_plot.add_curve(myCurve2);
+  //m_plot.add_curve(errCurve);
+  m_plot.add_curve(myCurve2);
 
 
   //  m_plot.add_curve(myCurve3,PlotMM::AXIS_BOTTOM,PlotMM::AXIS_RIGHT);
@@ -215,31 +200,41 @@ PlotTest::PlotTest() :
 
   myCurve2->set_curve_style(PlotMM::CURVE_LINES);
   myCurve2->paint()->set_pen_color(Gdk::Color("green"));
-  myCurve2->paint()->set_brush_color(Gdk::Color("blue"));
+  //myCurve2->paint()->set_brush_color(Gdk::Color("blue"));
 
   myCurve2->symbol()->set_style(PlotMM::SYMBOL_R_TRIANGLE);
-  myCurve2->symbol()->set_size(20);
+  myCurve2->symbol()->set_size(10);
   myCurve2->symbol()->paint()->set_pen_color(Gdk::Color("red"));
   myCurve2->symbol()->paint()->set_brush_color(Gdk::Color("yellow"));
 
 
   // some special settings for our error curve
-  myCurve0->symbol()->paint()->set_pen_color(Gdk::Color("red"));
-  myCurve0->error_paint()->set_pen_color(Gdk::Color("orange"));
-  myCurve0->error_paint()->set_brush_color(Gdk::Color("blue"));
-  myCurve0->symbol()->set_style(PlotMM::SYMBOL_ELLIPSE);
-  myCurve0->symbol()->set_size(10);
-  myCurve0->set_curve_style(PlotMM::CURVE_NONE);
+  errCurve->symbol()->paint()->set_pen_color(Gdk::Color("red"));
+  errCurve->error_paint()->set_pen_color(Gdk::Color("orange"));
+  errCurve->error_paint()->set_brush_color(Gdk::Color("blue"));
+  errCurve->symbol()->set_style(PlotMM::SYMBOL_ELLIPSE);
+  errCurve->symbol()->set_size(15);
+  errCurve->set_curve_style(PlotMM::CURVE_NONE);
 
   // of cource we also need data for the curves to show
-  double x1[] = {0,25,1200,100,0,200,290}; double x2[] = {0,40,60};
-  double y1[] = {0,10,80,600, 170, 0,290}; double y2[] = {10,15,20}; double y3[] = {4,5,4};
-  double X1[] = {30.0,40.0,50.0,30.0,40.0,50.0,50.0};
-  double Y1[] = {50.0,60.0,10.0,100.0,30.0,40.0,60.0};
 
-  myCurve0->set_data(x1,y1,X1,Y1,7);
-  myCurve1->set_data(x1,y1,7);
-  myCurve2->set_data(x1,y1,7);
+   double x1[73]; double y1[73]; double y2[73]; int i = 0;
+   for (double j = 0.0; j <= 360.0; j+=5.0){
+     y1[i] = sin(j*M_PI/180.0);
+     y2[i] = 0.25 * tan(j*M_PI/180.0);
+     x1[i++] = j;
+   }
+
+  //errCurve error values.
+  //double X1[] = {30.0,40.0,50.0,30.0,40.0,50.0,50.0};
+  //double Y1[] = {50.0,60.0,10.0,100.0,30.0,40.0,60.0};
+
+  //errCurve->set_data(x1,y1,X1,Y1,7);
+  std::cout << "Set data on Curve1" << std::endl;
+  myCurve1->set_data(x1,y1,72);
+  std::cout << "Set data on curve2" << std::endl;
+  myCurve2->set_data(x1,y2,72);
+  std::cout << "Done setting data" << std::endl;
   //myCurve3->set_data(x2,y2,3);
   //myCurve4->set_data(x1,y3,3);
 
@@ -307,7 +302,6 @@ void PlotTest::set_y1_label(char* str)
 }
 
 
-//void PlotTest::on_plot_mouse_press(int x,int y, GdkEventButton *ev)
 bool PlotTest::on_m_press(GdkEventButton *ev)
 {	
   int x, y;
@@ -334,7 +328,6 @@ bool PlotTest::on_m_press(GdkEventButton *ev)
   return true;
 }
 
-//void PlotTest::on_plot_mouse_release(int x,int y, GdkEventButton *ev)
 bool PlotTest::on_m_release(GdkEventButton *ev)
 {
   int x, y;
@@ -367,9 +360,6 @@ bool PlotTest::on_m_release(GdkEventButton *ev)
 }
 
 
-
-
-//void PlotTest::on_plot_mouse_move(int x,int y, GdkEventMotion *ev)
 bool PlotTest::on_m_move(GdkEventMotion *ev)
 {
   int x, y;
@@ -403,21 +393,6 @@ void PlotTest::replot()
 
 void PlotTest::do_the_plot()
 {
-  //    myCurve1->set_enabled(true);
-  //   m_plot.replot();
-  //canvas_.get_window()->show();
-  /*
-     double x[500], y[500];
-     for(int i=0; i<300; i++)
-     {
-     x[i] = i;
-     y[i] = (i/30)*(i/15);
-     myCurve1->set_data(x,y,i);
-     m_plot.replot();
-     }
-     */
-  //    m_plot.replot();
-  //    return;
   int winx, winy, winw, winh;
   double xx, yy;
 
