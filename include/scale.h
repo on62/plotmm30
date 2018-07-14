@@ -150,8 +150,6 @@ namespace PlotMM
       virtual void redraw(Cairo::RefPtr<Cairo::Context> const &cr) = 0;  //  Be careful. This makes this an abstract class.
 
       /*! implement this to react on changes of tick lengths */
-      // note that virtual methods are those that can be redeclared in subclasses.
-      // virtual methods can be called from the base class.
       virtual void on_tick_change() {}
 
       Glib::RefPtr<Gdk::Window> window_;
