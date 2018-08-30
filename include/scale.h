@@ -5,9 +5,7 @@
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the LGPL
  *****************************************************************************/
-
-#ifndef PLOTMM_SCALE_H
-#define PLOTMM_SCALE_H
+#pragma once
 
 #include <vector>
 #include <map>
@@ -18,11 +16,6 @@
 
 #include "doubleintmap.h"
 #include "scalediv.h"
-
-namespace Pango {
-  class Layout;
-  class FontDescription;
-}
 
 namespace PlotMM
 {
@@ -198,5 +191,3 @@ namespace PlotMM
   };
 
 } //namespace PlotMM
-
-#endif
