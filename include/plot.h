@@ -5,9 +5,7 @@
  * library is free software; you can redistribute it and/or
  * modify it under the terms of the LGPL
  *****************************************************************************/
-
-#ifndef PLOTMM_PLOT_H
-#define PLOTMM_PLOT_H
+#pragma once
 
 #include <vector>
 #include <gtkmm/window.h>
@@ -163,5 +161,3 @@ namespace PlotMM
   };
 
 }
-
-#endif//PLOTMM_PLOT_H
