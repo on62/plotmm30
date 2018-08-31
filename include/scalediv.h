@@ -6,9 +6,7 @@
  * modify it under the terms of the LGPL
  *****************************************************************************/
 /* ported from qwt */
-
-#ifndef PLOTMM_SCALEDIV_H
-#define PLOTMM_SCALEDIV_H
+#pragma once
 
 #include <vector>
 
@@ -126,5 +124,3 @@ class ScaleDiv
 };
 
 } //namespace PlotMM
-
-#endif
