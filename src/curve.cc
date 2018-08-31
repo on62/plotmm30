@@ -8,6 +8,7 @@
 /* ported from qwt */
 
 #include <glibmm/refptr.h>
+#include <iostream>
 
 #include "plotmm.h"
 #include "doubleintmap.h"
@@ -229,29 +230,17 @@ namespace PlotMM {
     if ( (x_.size() == 0) || (x_.size() != y_.size()) )
       return Rect<double>(1.0, -1.0, 1.0, -1.0); // invalid
 
-    const size_t sz = x_.size();
+    //NOTE: The following four lines replicate the above algorithm
+    //      However, as this makes four loops instead of one, it will
+    //      be a little slower!
 
-    double minX, maxX, minY, maxY;
-    std::vector<double>::const_iterator xIt = x_.begin();
-    std::vector<double>::const_iterator yIt = y_.begin();
-    std::vector<double>::const_iterator end = x_.begin() + sz;
-    minX = maxX = *xIt++;
-    minY = maxY = *yIt++;
+    double minX = *std::min_element(x_.begin(), x_.end());
+    double maxX = *std::max_element(x_.begin(), x_.end());
+    double minY = *std::min_element(y_.begin(), y_.end());
+    double maxY = *std::max_element(y_.begin(), y_.end());
+    //std::cerr << "MinX = " << minX << " MaxX = " << maxX
+    //          << " MinY = " << minY << " MaxY = " << maxY << std::endl;
 
-    while ( xIt < end )
-    {
-      const double xv = *xIt++;
-      if ( xv < minX )
-        minX = xv;
-      if ( xv > maxX )
-        maxX = xv;
-
-      const double yv = *yIt++;
-      if ( yv < minY )
-        minY = yv;
-      if ( yv > maxY )
-        maxY = yv;
-    }
     return Rect<double>(minX, maxX, minY, maxY);
   }
 
@@ -320,7 +309,7 @@ namespace PlotMM {
 
   void Curve::draw_curve_(const Cairo::RefPtr<Cairo::Context> &cr, const Glib::RefPtr<Gdk::Window> painter, int style,
       const DoubleIntMap &xMap, const DoubleIntMap &yMap, int from, int to)
-  {	
+  {
     switch (style)
     {
       case CURVE_NONE:
