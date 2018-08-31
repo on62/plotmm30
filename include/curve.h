@@ -11,20 +11,9 @@
 #define PLOTMM_CURVE_H
 
 #include <vector>
-
-//#include "compat.h"
-//#if (GTKMM_MAJOR_VERSION == 2 && GTKMM_MINOR_VERSION > 4)
-//#include <glibmm/objectbase.h>
-//#else
-//#include <sigc++/object.h>
-//#endif
-
 #include <glibmm/arrayhandle.h>
 #include <glibmm/ustring.h>
 
-//#include "symbol.h"
-//#include "point.h"
-//#include "doublerect.h"
 #include "point.h"
 #include "size.h"
 #include "rect.h"
@@ -34,14 +23,10 @@
 #include "paint.h"
 #include "rectangle.h"
 
-//namespace Gtk {
-  //  class Drawable;
-//}
-
 namespace PlotMM {
 
-  class Paint;
-  class DoubleIntMap;
+//  class Paint;
+//  class DoubleIntMap;
 
   /*!
     Curve styles.
@@ -104,15 +89,14 @@ namespace PlotMM {
       virtual ~Curve();
 
       //! Enable or disable this curve for drawing
-      virtual void set_enabled(bool b) { enabled_= b; }
+      virtual void set_enabled(bool b) { enabled_ = b; }
       //! Query if this curve is enabled for drawing
       virtual bool enabled() { return enabled_; }
 
       const Curve& operator= (const Curve &c);
 
       // void set_rawData(const double *x, const double *y, int size);
-      virtual void set_data(const double *xData, const double *yData,
-          int size);
+      virtual void set_data(const double *xData, const double *yData, int size);
       virtual void set_data(const std::vector<double> &xData,
           const std::vector<double> &yData);
       virtual void set_data(const Glib::ArrayHandle<Point<double>> &data);
@@ -245,20 +229,17 @@ namespace PlotMM {
           ) const;
 
       virtual void curve_changed();
-
       virtual int verify_range(int &i1, int &i2);
 
     private:
       bool enabled_;
       std::vector<double> x_;
       std::vector<double> y_;
-
       CurveStyleID cStyle_;
       double baseline_;
       bool fill_;
 
       Glib::RefPtr<Symbol> symbol_;
-
       Glib::RefPtr<Paint> paint_;
       Glib::ustring title_;
 
