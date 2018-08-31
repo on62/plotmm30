@@ -5,23 +5,19 @@
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the LGPL
  *****************************************************************************/
-#include "paint.h"
-
-#include <gdkmm/rectangle.h>
-
-#include <pangomm/layout.h>
-
-#include <gtkmm/window.h>
-#include <gtkmm/button.h>
-
-#include "curve.h"
-#include "plot.h"
 
 #include <iostream>
 #include <sigc++/sigc++.h>
 #include <gdkmm/general.h> // set_source_pixbuf()
-
+#include <gdkmm/rectangle.h>
+#include <pangomm/layout.h>
+#include <gtkmm/window.h>
+#include <gtkmm/button.h>
 #include <sys/time.h>
+
+#include "paint.h"
+#include "curve.h"
+#include "plot.h"
 
 namespace PlotMM {
 
@@ -44,7 +40,7 @@ namespace PlotMM {
     Gtk::DrawingArea::on_realize();
 
     // Now we can allocate any additional resources we need
-    window_= get_window();
+    window_ = get_window();
     update_();
   }
 
@@ -55,7 +51,7 @@ namespace PlotMM {
    */
   void PlotLabel::set_text(const Glib::ustring &str)
   {
-    if (str=="")
+    if (str == "")
       layout_->set_text(" ");
     else
       layout_->set_text(str);
@@ -69,8 +65,8 @@ namespace PlotMM {
   */
   Glib::ustring PlotLabel::get_text()
   {
-    Glib::ustring str= layout_->get_text();
-    return str==" " ? "" : str;
+    Glib::ustring str = layout_->get_text();
+    return str == " " ? "" : str;
   }
 
   /*! Enable or disable displaying of the label's text
@@ -79,7 +75,8 @@ namespace PlotMM {
    */
   void PlotLabel::set_enabled(bool b)
   {
-    if (b==enabled_) return;
+    if(b == enabled_)
+      return;
     enabled_= b;
     update_();
   }
@@ -100,13 +97,13 @@ namespace PlotMM {
     int winx, winy, winw, winh;
     win_->get_geometry(winx, winy, winw, winh);
 
-    int layw,layh;
+    int layw, layh;
 
     if (orientation_==Gtk::ORIENTATION_HORIZONTAL) {
-      layout_->get_pixel_size(layw,layh);
+      layout_->get_pixel_size(layw, layh);
       cr->move_to((winw-layw)/2,0);
     } else {
-      layout_->get_pixel_size(layh,layw);
+      layout_->get_pixel_size(layh, layw);
       cr->move_to(0,(winh+layh)/2);
       cr->rotate_degrees(-90);
     }
@@ -121,21 +118,21 @@ namespace PlotMM {
   void PlotLabel::update_()
   {
 
-    tainted_= true;
+    tainted_ = true;
     if (!window_)
       return;
 
-    int layw,layh;
-    layout_->get_pixel_size(layw,layh);
+    int layw, layh;
+    layout_->get_pixel_size(layw, layh);
     int winx, winy, winw, winh;
     window_->get_geometry(winx, winy, winw, winh);
 
     Gdk::Rectangle area(0, 0, layw, layh);
 
     if (orientation_==Gtk::ORIENTATION_HORIZONTAL) {
-      set_size_request(-1,enabled()?layh:0);
+      set_size_request(-1, enabled() ? layh : 0);
     } else {
-      set_size_request(enabled()?layh:0,-1);
+      set_size_request(enabled() ? layh : 0, -1);
     }
 
     tainted_= false;
@@ -220,7 +217,7 @@ namespace PlotMM {
     if (replotting_ || !window_)
       return false;
 
-    return replotting_= true;
+    return replotting_ = true;
   }
 
   /*! End replot of the plot canvas' contents
@@ -232,13 +229,14 @@ namespace PlotMM {
   {
     if (!replotting_)
       return;
-    replotting_= false;
+
+    replotting_ = false;
   }
 
 
   Plot::Plot() :
     layout_(7,9),
-    title_(this,Gtk::ORIENTATION_HORIZONTAL),
+    title_(this, Gtk::ORIENTATION_HORIZONTAL),
     canvas_(this),
     draw_select_(false)
   {
@@ -273,19 +271,19 @@ namespace PlotMM {
 
     add(layout_);
 
-    int fontsize= axisLabel_[0]->font()->get_size();
+    int fontsize = axisLabel_[0]->font()->get_size();
 
     // std::cerr << "fontsize is "<<fontsize<<"\n";
 
-    axisLabel_[0]->font()->set_size(int(fontsize*.9));
-    axisLabel_[1]->font()->set_size(int(fontsize*.9));
-    axisLabel_[2]->font()->set_size(int(fontsize*.9));
-    axisLabel_[3]->font()->set_size(int(fontsize*.9));
+    axisLabel_[0]->font()->set_size(int(fontsize * 0.9));
+    axisLabel_[1]->font()->set_size(int(fontsize * 0.9));
+    axisLabel_[2]->font()->set_size(int(fontsize * 0.9));
+    axisLabel_[3]->font()->set_size(int(fontsize * 0.9));
 
-    tickLabel_[0]->font()->set_size(int(fontsize*.8));
-    tickLabel_[1]->font()->set_size(int(fontsize*.8));
-    tickLabel_[2]->font()->set_size(int(fontsize*.8));
-    tickLabel_[3]->font()->set_size(int(fontsize*.8));
+    tickLabel_[0]->font()->set_size(int(fontsize * 0.8));
+    tickLabel_[1]->font()->set_size(int(fontsize * 0.8));
+    tickLabel_[2]->font()->set_size(int(fontsize * 0.8));
+    tickLabel_[3]->font()->set_size(int(fontsize * 0.8));
   }
 
 
@@ -301,7 +299,8 @@ namespace PlotMM {
   int Plot::add_curve(
       const Glib::RefPtr<Curve> &cv,
       PlotAxisID xaxis,
-      PlotAxisID yaxis,bool enable)
+      PlotAxisID yaxis,
+      bool enable)
   {
     CurveInfo curveI;
     cv->set_enabled(enable);
@@ -331,7 +330,7 @@ namespace PlotMM {
     for (axis = 0; axis < 4; ++axis) {
       if (tickMark_[axis]->autoscale()) {
         tickMark_[axis]->begin_autoscale();
-        autoscale= true;
+        autoscale = true;
       }
     }
 
@@ -339,16 +338,16 @@ namespace PlotMM {
     if (autoscale) {
       for (cv = plotDict_.begin(); cv != plotDict_.end(); ++cv) {
         if ((*cv).curve->enabled()) {
-          PlotAxisID xaxis= (*cv).xaxis;
-          PlotAxisID yaxis= (*cv).yaxis;
-          Rect<double> br= (*cv).curve->bounding_rect();
+          PlotAxisID xaxis = (*cv).xaxis;
+          PlotAxisID yaxis = (*cv).yaxis;
+          Rect<double> br = (*cv).curve->bounding_rect();
           tickMark_[xaxis]->autoscale(br.get_x1(),br.get_x2());
           tickMark_[yaxis]->autoscale(br.get_y1(),br.get_y2());
         }
       }
 
       // This ends the autoscaling for all axes marked for autoscale.
-      for (axis=0; axis<4; ++axis) {
+      for (axis = 0; axis < 4; ++axis) {
         if (tickMark_[axis]->autoscale()) {
           tickMark_[axis]->end_autoscale();
         }
@@ -395,14 +394,14 @@ namespace PlotMM {
 
     for (cv = plotDict_.begin(); cv != plotDict_.end(); ++cv) {
       if ((*cv).curve->enabled()){
-        PlotAxisID xaxis= (*cv).xaxis;
-        PlotAxisID yaxis= (*cv).yaxis;
+        PlotAxisID xaxis = (*cv).xaxis;
+        PlotAxisID yaxis = (*cv).yaxis;
         int winx, winy, winw, winh;
 
         tickMark_[xaxis]->get_window()->get_geometry(winx, winy, winw, winh);
-        tickMark_[xaxis]->scale_map().set_int_range(0, winw-1);
+        tickMark_[xaxis]->scale_map().set_int_range(0, winw - 1);
         tickMark_[yaxis]->get_window()->get_geometry(winx, winy, winw, winh);
-        tickMark_[yaxis]->scale_map().set_int_range(winh-1, 0);
+        tickMark_[yaxis]->scale_map().set_int_range(winh - 1, 0);
 
         //Bitter experience has shown that it is best not to store the Cairo::Context.  Pass it as argument
 
@@ -442,7 +441,7 @@ namespace PlotMM {
   {
     if (draw_select_)
       return;
-    draw_select_= true;
+    draw_select_ = true;
     set_selection(select_);
   }
 
@@ -453,7 +452,7 @@ namespace PlotMM {
   {
     if (!draw_select_)
       return;
-    draw_select_= false;
+    draw_select_ = false;
 
   }
 
@@ -472,7 +471,7 @@ namespace PlotMM {
     canvas_.get_window()->get_geometry(winx, winy, winw, winh);
 
     //  clear the screen to a background color and redraw the last canvas image if exists.
-    gc_->set_source_rgb(0.9,0.9,0.9);
+    gc_->set_source_rgb(0.9, 0.9, 0.9);
 
     gc_->paint();
 
@@ -484,7 +483,7 @@ namespace PlotMM {
     }
     // draw a rectangle on the image
     gc_->save();
-    gc_->set_source_rgb(0.7,0.4,0.0);
+    gc_->set_source_rgb(0.7, 0.4, 0.0);
 
     gc_->rectangle(
         select_.get_x_min(),
@@ -492,7 +491,6 @@ namespace PlotMM {
         select_.get_abs_width(),
         select_.get_abs_height()
         );
-
     gc_->stroke();
 
     gc_->restore();

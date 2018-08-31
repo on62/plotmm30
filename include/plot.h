@@ -10,11 +10,9 @@
 #include <vector>
 #include <gtkmm/window.h>
 #include <gtkmm/box.h>
-
 #include <cairomm/context.h>
 #include <cairomm/fontoptions.h>
 #include <cairo/cairo.h>
-
 #include <gtkmm/drawingarea.h>
 #include <gtkmm/table.h>
 #include <gtkmm/frame.h>
@@ -51,11 +49,10 @@ namespace PlotMM
   class PlotLabel : public Gtk::DrawingArea
   {
     public:
-      PlotLabel(Gtk::Widget *w,Gtk::Orientation o,const Glib::ustring & ="");
+      PlotLabel(Gtk::Widget *w, Gtk::Orientation o, const Glib::ustring & = "");
       void set_text(const Glib::ustring &);
       Glib::ustring get_text();
       Pango::FontDescription *font() { return &font_; }
-
       void set_enabled(bool b);
       bool enabled() const { return enabled_; }
 
