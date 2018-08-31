@@ -50,7 +50,7 @@ namespace PlotMM
       int offset_;
       int layw_, layh_;
       int range_;
-      std::map<int,double> labels_;
+      std::map<int, double> labels_;
       Glib::RefPtr<Pango::Layout> layout_;
       Pango::FontDescription font_;
 
@@ -89,8 +89,6 @@ namespace PlotMM
       virtual void update_(const Cairo::RefPtr<Cairo::Context> &);
       virtual void requestsize_();
   };
-
-
 
   /*! @brief Class to draw a scale.
    *
@@ -155,6 +153,7 @@ namespace PlotMM
     private:
       Gtk::PositionType position_;
       bool autoscale_;
+      bool logscale;
       bool enabled_;
       int majorTL_, minorTL_;
       double asMin_, asMax_;

@@ -7,13 +7,11 @@
  *****************************************************************************/
 
 #include <pangomm/layout.h>
-
-#include "scale.h"
-
 #include <iostream>
 #include <sstream>
 #include <sys/time.h>
 
+#include "scale.h"
 namespace PlotMM {
 
   /*! Constructor
@@ -23,8 +21,7 @@ namespace PlotMM {
     enabled_(true)
   {
     set_app_paintable();
-    layout_= create_pango_layout("");
-
+    layout_ = create_pango_layout("");
   }
 
   /*! Destructor */
@@ -55,7 +52,9 @@ namespace PlotMM {
    */
   void ScaleLabels::set_enabled(bool b)
   {
-    if (b==enabled_) return;
+    if (b == enabled_)
+      return;
+
     enabled_= b;
     newsize_();
   }
@@ -66,9 +65,12 @@ namespace PlotMM {
    */
   Glib::ustring ScaleLabels::format(double d) const
   {
-    char tmp[100];
-    sprintf(tmp,"%g",d);  // prints a double to a string tmp
-    return tmp;
+    std::ostringstream rVal;
+    rVal << d;
+    return rVal.str();
+    //char tmp[100];
+    //sprintf(tmp, "%g", d);  // prints a double to a string tmp
+    //return tmp;
   }
 
   /*! Query the pixel width of the given text when rendered with the
@@ -80,7 +82,7 @@ namespace PlotMM {
     layout_->set_font_description(font_);
     layout_->set_text(str);
     layout_->context_changed();
-    layout_->get_pixel_size(layw,layh);
+    layout_->get_pixel_size(layw, layh);
     return layw;
   }
 
@@ -89,11 +91,11 @@ namespace PlotMM {
    */
   int ScaleLabels::text_height(const Glib::ustring &str) const
   {
-    int layw,layh;
+    int layw, layh;
     layout_->set_font_description(font_);
     layout_->set_text(str);
     layout_->context_changed();
-    layout_->get_pixel_size(layw,layh);
+    layout_->get_pixel_size(layw, layh);
     return layh;
   }
 
@@ -115,15 +117,13 @@ namespace PlotMM {
   void VScaleLabels::on_realize()
   {
     Gtk::DrawingArea::on_realize();
-    window_= get_window();
-
+    window_ = get_window();
   }
 
 
 
   bool VScaleLabels::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
   {
-
     //   newsize_();
     update_(cr);
     return false;
@@ -146,10 +146,8 @@ namespace PlotMM {
   void HScaleLabels::on_realize()
   {
     Gtk::DrawingArea::on_realize();
-    window_= get_window();
+    window_ = get_window();
   }
-
-
 
   bool HScaleLabels::on_draw(const Cairo::RefPtr<Cairo::Context> &cr)
   {
@@ -161,45 +159,46 @@ namespace PlotMM {
 
   void ScaleLabels::newsize_()
   {
-    if (!labels_.size()) return;  // if there are no labels, return
+    if (!labels_.size())
+      return;  // if there are no labels, return
+
     if (!enabled()) {
       set_size_request(0,0);  // make as small as possible if not drawn
       return;
-    } else {
+    }
+    else {
       layh_= text_height("8,8");
-      layw_= 0;
+      layw_ = 0;
       int min, max;
-      min= max= labels_.begin()->first;
+      min = max = labels_.begin()->first;
 
       std::map<int,double>::iterator daPos;
       for (daPos= labels_.begin(); daPos!=labels_.end(); ++daPos) {
-        layw_= MAX(layw_,text_width(format(daPos->second)));
-        min= MIN(min,daPos->first);
-        max= MAX(max,daPos->first);
+        layw_= MAX(layw_, text_width(format(daPos->second)));
+        min = MIN(min,daPos->first);
+        max = MAX(max,daPos->first);
       }
-      range_= max-min;
+      range_ = max - min;
     }
     requestsize_();
   }
 
   void VScaleLabels::requestsize_()
   {
-    Glib::RefPtr<Gdk::Window> window= get_window();
-    if (!window) return;
+    Glib::RefPtr<Gdk::Window> window = get_window();
+    if (!window)
+      return;
 
-    //    int winx,winy,winw,winh,wind;
-    //    window->get_geometry(winx, winy, winw, winh);
-    set_size_request(layw_,-1);
+    set_size_request(layw_, -1);
   }
 
   void HScaleLabels::requestsize_()
   {
-    Glib::RefPtr<Gdk::Window> window= get_window();
-    if (!window) return;
+    Glib::RefPtr<Gdk::Window> window = get_window();
+    if (!window)
+      return;
 
-    //    int winx,winy,winw,winh,wind;
-    //    window->get_geometry(winx, winy, winw, winh);
-    set_size_request(-1,layh_);
+    set_size_request(-1, layh_);
   }
 
   /* ****************************************************************** */
@@ -207,13 +206,18 @@ namespace PlotMM {
   void VScaleLabels::update_(const Cairo::RefPtr<Cairo::Context> &cr)
   {
 
-    if (!enabled()) return;
-    if (!labels_.size()) return;
-    Glib::RefPtr<Gdk::Window> window= get_window();
-    if (!window) return;
+    if (!enabled())
+      return;
 
-    int layw,layh;
-    int winx,winy,winw,winh;
+    if (!labels_.size())
+      return;
+
+    Glib::RefPtr<Gdk::Window> window = get_window();
+    if (!window)
+      return;
+
+    int layw, layh;
+    int winx, winy, winw, winh;
     window->get_geometry(winx, winy, winw, winh);
 
     // blank the scalelabel area to white and then reset cairo color to black
@@ -224,57 +228,64 @@ namespace PlotMM {
 
     std::map<int,double>::iterator daPos;
     layout_->set_font_description(font_);
-    for (daPos= labels_.begin(); daPos!=labels_.end(); ++daPos) {
+    for(daPos = labels_.begin(); daPos != labels_.end(); ++daPos) {
       layout_->set_text(format(daPos->second));
       layout_->context_changed();
-      layout_->get_pixel_size(layw,layh);
-      int lx=0,ly=offset_-winy-layh/2+daPos->first;
-      if (position()==Gtk::POS_LEFT) {
-        lx= winw-layw;
+      layout_->get_pixel_size(layw, layh);
+      int lx = 0, ly = offset_ - winy - layh/2 + daPos->first;
+
+      if(position() == Gtk::POS_LEFT) {
+        lx = winw - layw;
       }
-      if (ly<0) ly=0;
-      else if (ly+layh>winh) ly=winh-layh;
+
+      if(ly < 0)
+        ly = 0;
+      else
+        if(ly + layh > winh)
+          ly = winh - layh;
 
       cr->move_to(lx, ly);
-
       layout_->show_in_cairo_context (cr);
-
       cr->stroke();
     }
-
   }
 
   void HScaleLabels::update_(const Cairo::RefPtr<Cairo::Context> &cr)
   {
-    if (!enabled()) return;
-    if (!labels_.size()) return;
-    Glib::RefPtr<Gdk::Window> window= get_window();
-    if (!window) return;
+    if (!enabled())
+      return;
+
+    if (!labels_.size())
+      return;
+
+    Glib::RefPtr<Gdk::Window> window = get_window();
+    if (!window)
+      return;
 
     // blank the scalelabel area to white and then reset cairo color to black
     //    cr->set_source_rgb(1.0, 1.0, 1.0);
     //    cr->paint();
     cr->set_source_rgb(0.0, 0.0, 0.0);
 
-    int layw,layh;
-    int winx,winy,winw,winh;
+    int layw, layh;
+    int winx, winy, winw, winh;
     window->get_geometry(winx, winy, winw, winh);
     //window->clear();
 
     std::map<int,double>::iterator daPos;
     layout_->set_font_description(font_);
-    for (daPos= labels_.begin(); daPos!=labels_.end(); ++daPos)
+    for (daPos = labels_.begin(); daPos != labels_.end(); ++daPos)
     {
       layout_->set_text(format(daPos->second));
       layout_->context_changed();
-      layout_->get_pixel_size(layw,layh);
-      int lx=offset_-winx-layw/2+daPos->first, ly=0;
-      if (position()==Gtk::POS_TOP)
-        ly= winh-layh;
-      if (lx<0)
-        lx=0;
-      else if (lx+layw>winw)
-        lx=winw-layw;
+      layout_->get_pixel_size(layw, layh);
+      int lx = offset_- winx - layw/2 + daPos->first, ly = 0;
+      if (position() == Gtk::POS_TOP)
+        ly = winh - layh;
+      if (lx < 0)
+        lx = 0;
+      else if (lx + layw > winw)
+        lx = winw - layw;
 
       cr->move_to(lx, ly);
 
@@ -296,12 +307,14 @@ namespace PlotMM {
   Scale::Scale(Gtk::PositionType p, ScaleLabels *l) :
     labels_(l),   //  Note this is the letter el not the number one.
     position_(p),
+    autoscale_(true),
+    logscale(false),
     enabled_(false),
     majorTL_(10),
     minorTL_(5)
   {
     set_app_paintable();
-    set_range(-1,1,false);
+    set_range(-1, 1, false);
   }
 
   /*! Destructor */
@@ -333,8 +346,12 @@ namespace PlotMM {
    */
   void Scale::set_enabled(bool b)
   {
-    if (labels_) labels_->set_enabled(b);
-    if (b==enabled_) return;
+    if (labels_)
+      labels_->set_enabled(b);
+
+    if (b == enabled_)
+      return;
+
     enabled_= b;
     on_tick_change();
     signal_enabled(enabled_);
@@ -353,12 +370,6 @@ namespace PlotMM {
   void Scale::on_realize()
   {
     Gtk::DrawingArea::on_realize();
-#if 0
-    if (labels_) {
-      labwin_= labels_->get_window();  // never used!
-    }
-#endif
-    //gc_ = Gdk::GC::create(window_);
     window_= get_window();
 
     on_tick_change();
