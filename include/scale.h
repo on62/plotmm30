@@ -165,7 +165,7 @@ namespace PlotMM
   class VScale : public Scale
   {
     public:
-      VScale(Gtk::PositionType p, ScaleLabels *l= 0);
+      VScale(Gtk::PositionType p, ScaleLabels *l = 0);
       virtual ~VScale();
 
     protected:
@@ -180,7 +180,7 @@ namespace PlotMM
   class HScale : public Scale
   {
     public:
-      HScale(Gtk::PositionType p, ScaleLabels *l= 0);
+      HScale(Gtk::PositionType p, ScaleLabels *l = 0);
       virtual ~HScale();
 
     protected:

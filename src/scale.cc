@@ -174,9 +174,9 @@ namespace PlotMM {
 
       std::map<int,double>::iterator daPos;
       for (daPos= labels_.begin(); daPos!=labels_.end(); ++daPos) {
-        layw_= MAX(layw_, text_width(format(daPos->second)));
-        min = MIN(min,daPos->first);
-        max = MAX(max,daPos->first);
+        layw_= std::max(layw_, text_width(format(daPos->second)));
+        min = std::min(min,daPos->first);
+        max = std::max(max,daPos->first);
       }
       range_ = max - min;
     }
@@ -429,11 +429,11 @@ namespace PlotMM {
   {
     if (!autoscale_) return;
     if (asMin_ > asMax_) {
-      asMin_= MIN(min,max);
-      asMax_= MAX(min,max);
+      asMin_= std::min(min,max);
+      asMax_= std::max(min,max);
     } else {
-      asMin_= MIN(asMin_,MIN(min,max));
-      asMax_= MAX(asMax_,MAX(min,max));
+      asMin_= std::min(asMin_,std::min(min,max));
+      asMax_= std::max(asMax_,std::max(min,max));
     }
   }
 
