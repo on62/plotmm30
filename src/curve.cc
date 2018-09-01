@@ -449,11 +449,6 @@ namespace PlotMM {
   void Curve::draw_dots_(const Cairo::RefPtr<Cairo::Context> &cr, const Glib::RefPtr<Gdk::Window> painter,
       const DoubleIntMap &xMap, const DoubleIntMap &yMap, int from, int to)
   {
-
-    // const bool doFill = painter->brush().paint() != Qt::NoBrush;
-    //    bool doFill= paint()->filled();
-
-    //    cr->save();
     paint()->set_cr_to_pen(cr);
     cr->set_line_width(8);
     cr->set_line_cap(Cairo::LINE_CAP_ROUND);
@@ -556,7 +551,7 @@ namespace PlotMM {
     int xi = xMap.transform(x(from));
     int yi = yMap.transform(y(from));
     polyline.push_back(Gdk::Point(xi, yi));
-    cr->move_to(xMap.transform(x(from)),yMap.transform(y(from)));
+    cr->move_to(xMap.transform(x(from)), yMap.transform(y(from)));
 
     for (i = from + 1, ip = 0; i <= to; i++, ip += 2)
     {

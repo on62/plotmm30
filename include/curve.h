@@ -25,8 +25,8 @@
 
 namespace PlotMM {
 
-//  class Paint;
-//  class DoubleIntMap;
+  //  class Paint;
+  //  class DoubleIntMap;
 
   /*!
     Curve styles.
