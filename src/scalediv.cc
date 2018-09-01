@@ -46,12 +46,12 @@ namespace PlotMM {
 
 
   //! Construct a ScaleDiv instance.
-  ScaleDiv::ScaleDiv()
+  ScaleDiv::ScaleDiv() :
+    d_lBound(0.0),
+    d_hBound(0.0),
+    d_majStep(0.0),
+    d_log(false)
   {
-    d_lBound = 0.0;
-    d_hBound = 0.0;
-    d_majStep = 0.0;
-    d_log = false;
   }
 
   /*!
