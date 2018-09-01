@@ -18,7 +18,7 @@ namespace PlotMM {
   static const double step_eps = 1.0e-3;
   static const double border_eps = 1.0e-10;
 
-  static bool range_limes(double &val, double v1, double v2,
+  static bool range_limits(double &val, double v1, double v2,
       double eps_rel = 0.0, double eps_abs = 0.0)
   {
     bool rv = true;
@@ -212,7 +212,7 @@ namespace PlotMM {
       for (k=0; k< nMin; k++)
       {
         mval = (val += minStep);
-        if (range_limes(mval, d_lBound, d_hBound, border_eps))
+        if (range_limits(mval, d_lBound, d_hBound, border_eps))
         {
           buffer[minSize] = mval;
           minSize++;
@@ -248,8 +248,8 @@ namespace PlotMM {
     majStep = std::abs(majStep);
 
     // boundary check
-    range_limes(d_hBound, LOG_MIN, LOG_MAX);
-    range_limes(d_lBound, LOG_MIN, LOG_MAX);
+    range_limits(d_hBound, LOG_MIN, LOG_MAX);
+    range_limits(d_lBound, LOG_MIN, LOG_MAX);
 
     // detach arrays
     majMarks_.clear();
@@ -348,7 +348,7 @@ namespace PlotMM {
         for (k = k0; k <= kmax; k+=kstep)
         {
           sval = val * static_cast<double>(k);
-          if (range_limes(sval, d_lBound, d_hBound, border_eps))
+          if (range_limits(sval, d_lBound, d_hBound, border_eps))
           {
             buffer.push_back(sval);
             minSize++;
@@ -392,7 +392,7 @@ namespace PlotMM {
         for (k = 0; k < nMin; k++)
         {
           sval = (val *= minFactor);
-          if (range_limes(sval, d_lBound, d_hBound, border_eps))
+          if (range_limits(sval, d_lBound, d_hBound, border_eps))
           {
             buffer.push_back(sval);
             minSize++;
