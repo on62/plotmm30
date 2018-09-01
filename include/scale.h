@@ -96,7 +96,7 @@ namespace PlotMM
   class Scale : public Gtk::DrawingArea
   {
     public:
-      Scale(Gtk::PositionType p, ScaleLabels *labels= 0);
+      Scale(Gtk::PositionType p, ScaleLabels *labels = 0);
       virtual ~Scale();
 
       ScaleDiv* get_scaleDiv(){ return &scaleDiv_; }
