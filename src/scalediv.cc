@@ -31,12 +31,14 @@ namespace PlotMM {
     {
       if (val < vmin - delta_min)
         rv = false;
+
       val = vmin;
     }
     else if (val > vmax)
     {
       if (val > vmax + delta_max)
         rv = false;
+
       val = vmax;
     }
     return rv;
@@ -154,16 +156,17 @@ namespace PlotMM {
     //
     if (step == 0.0)
       d_majStep = ceil_125(std::abs(d_hBound - d_lBound) * 0.999999
-          / double(maxMajSteps));
+          / static_cast<double>(maxMajSteps));
     else
       d_majStep = step;
 
-    if (d_majStep == 0.0) return true;
+    if (d_majStep == 0.0)
+      return true;
 
     firstTick = ceil( (d_lBound - step_eps * d_majStep) / d_majStep) * d_majStep;
     lastTick = floor( (d_hBound + step_eps * d_majStep) / d_majStep) * d_majStep;
 
-    nMaj = std::min(10000, int(floor ((lastTick - firstTick) / d_majStep + 0.5)) + 1);
+    nMaj = std::min(10000, static_cast<int>(floor ((lastTick - firstTick) / d_majStep + 0.5)) + 1);
 
     lin_space(majMarks_, nMaj, firstTick, lastTick);
 
@@ -173,14 +176,15 @@ namespace PlotMM {
     if (maxMinSteps < 1) // no minor divs
       return true;
 
-    minStep = ceil_125( d_majStep  /  double(maxMinSteps) );
+    minStep = ceil_125( d_majStep  /  static_cast<double>(maxMinSteps) );
 
-    if (minStep == 0.0) return true;
+    if (minStep == 0.0)
+      return true;
 
-    nMin = std::abs(int(floor(d_majStep / minStep + 0.5))) - 1; // # minor steps per interval
+    nMin = std::abs(static_cast<int>(floor(d_majStep / minStep + 0.5))) - 1; // # minor steps per interval
 
     // Do the minor steps fit into the interval?
-    if ( std::abs(double(nMin +  1) * minStep - d_majStep)
+    if ( std::abs(static_cast<double>(nMin +  1) * minStep - d_majStep)
         >  step_eps * d_majStep)
     {
       nMin = 1;
@@ -198,7 +202,7 @@ namespace PlotMM {
 
     // calculate minor ticks
     minSize = 0;
-    for (i = i0; i < (int)majMarks_.size(); i++)
+    for (i = i0; i < static_cast<int>(majMarks_.size()); i++)
     {
       if (i >= 0)
         val = majMarks_[i];
@@ -271,7 +275,7 @@ namespace PlotMM {
     //  Set up major scale divisions
     //
     if (majStep == 0.0)
-      d_majStep = ceil_125( width * 0.999999 / double(maxMajSteps));
+      d_majStep = ceil_125( width * 0.999999 / static_cast<double>(maxMajSteps));
     else
       d_majStep = majStep;
 
@@ -285,7 +289,7 @@ namespace PlotMM {
     firstTick = pow(10.0, lFirst);
     lastTick = pow(10.0, lLast);
 
-    nMaj = std::min(10000, int(floor (std::abs(lLast - lFirst) / d_majStep + 0.5)) + 1);
+    nMaj = std::min(10000, static_cast<int>(floor (std::abs(lLast - lFirst) / d_majStep + 0.5)) + 1);
 
     log_space(majMarks_, nMaj, firstTick, lastTick);
 
@@ -293,7 +297,8 @@ namespace PlotMM {
     // Set up minor scale divisions
     //
 
-    if ((majMarks_.size() < 1) || (maxMinSteps < 1)) return true; // no minor marks
+    if ((majMarks_.size() < 1) || (maxMinSteps < 1))
+      return true; // no minor marks
 
     if (d_majStep < 1.1)            // major step width is one decade
     {
@@ -336,16 +341,13 @@ namespace PlotMM {
         i0 = 0;
 
       minSize = 0;
-      for (i = i0; i< (int)majMarks_.size(); i++)
+      for (i = i0; i < static_cast<int>(majMarks_.size()); i++)
       {
-        if (i >= 0)
-          val = majMarks_[i];
-        else
-          val = majMarks_[0] / pow(10.0, d_majStep);
+        val = (i >= 0) ? majMarks_[i] : majMarks_[0] / pow(10.0, d_majStep);
 
-        for (k=k0; k<= kmax; k+=kstep)
+        for (k = k0; k <= kmax; k+=kstep)
         {
-          sval = val * double(k);
+          sval = val * static_cast<double>(k);
           if (range_limes(sval, d_lBound, d_hBound, border_eps))
           {
             buffer.push_back(sval);
@@ -353,27 +355,25 @@ namespace PlotMM {
           }
         }
       }
-
       // copy values into the min_marks array
-      minMarks_= buffer;
-
+      minMarks_ = buffer;
     }
     else                // major step > one decade
     {
-
       // substep width in decades, at least one decade
-      minStep = ceil_125( (d_majStep - step_eps * (d_majStep / double(maxMinSteps)))
-          /  double(maxMinSteps) );
+      minStep = ceil_125( (d_majStep - step_eps * (d_majStep / static_cast<double>(maxMinSteps)))
+          /  static_cast<double>(maxMinSteps) );
       minStep = std::max(1.0, minStep);
 
       // # subticks per interval
-      nMin = int(floor (d_majStep / minStep + 0.5)) - 1;
+      nMin = static_cast<int>(floor (d_majStep / minStep + 0.5)) - 1;
 
       // Do the minor steps fit into the interval?
-      if ( std::abs( double(nMin + 1) * minStep - d_majStep)  >  step_eps * d_majStep)
+      if ( std::abs( static_cast<double>(nMin + 1) * minStep - d_majStep)  >  step_eps * d_majStep)
         nMin = 0;
 
-      if (nMin < 1) return true;      // no subticks
+      if (nMin < 1)
+        return true;      // no subticks
 
       // resize buffer to max. possible number of subticks
       buffer.clear();
@@ -382,20 +382,14 @@ namespace PlotMM {
       minFactor = std::max(pow(10.0, minStep), 10.0);
 
       // Are there minor ticks below the first major tick?
-      if ( d_lBound < firstTick )
-        i0 = -1;
-      else
-        i0 = 0;
+      i0 = (d_lBound < firstTick ) ? -1 : 0;
 
       minSize = 0;
-      for (i = i0; i< (int)majMarks_.size(); i++)
+      for (i = i0; i < static_cast<int>(majMarks_.size()); i++)
       {
-        if (i >= 0)
-          val = majMarks_[i];
-        else
-          val = firstTick / pow(10.0, d_majStep);
+        val = (i >= 0) ? majMarks_[i] : firstTick / pow(10.0, d_majStep);
 
-        for (k=0; k< nMin; k++)
+        for (k = 0; k < nMin; k++)
         {
           sval = (val *= minFactor);
           if (range_limes(sval, d_lBound, d_hBound, border_eps))
@@ -417,12 +411,20 @@ namespace PlotMM {
     */
   int ScaleDiv::operator==(const ScaleDiv &s) const
   {
-    if (d_lBound != s.d_lBound) return 0;
-    if (d_hBound != s.d_hBound) return 0;
-    if (d_log != s.d_log) return 0;
-    if (d_majStep != s.d_majStep) return 0;
-    if (majMarks_ != s.majMarks_) return 0;
-    return (minMarks_ == s.minMarks_);
+    int rVal =
+      (d_lBound == s.d_lBound)   &&
+      (d_hBound == s.d_hBound)   &&
+      (d_log == s.d_log)         &&
+      (d_majStep == s.d_majStep) &&
+      (majMarks_ == s.majMarks_) &&
+      (minMarks_ == s.minMarks_);
+    return rVal;
+    // if (d_lBound != s.d_lBound) return 0;
+    // if (d_hBound != s.d_hBound) return 0;
+    // if (d_log != s.d_log) return 0;
+    // if (d_majStep != s.d_majStep) return 0;
+    // if (majMarks_ != s.majMarks_) return 0;
+    // return (minMarks_ == s.minMarks_);
   }
 
   /*!
