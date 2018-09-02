@@ -128,9 +128,6 @@ namespace PlotMM {
         return d_log;
       }
 
-      static const double LogMin;
-      static const double LogMax;
-
     private:
       void newFactor();
 
