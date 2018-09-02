@@ -9,8 +9,6 @@
 
 #include "supplemental.h"
 
-using namespace PlotMM;
-
 namespace PlotMM {
 
   const double LogMin = 1.0e-150;
@@ -163,7 +161,7 @@ namespace PlotMM {
     */
   void twist_array(std::vector<double> &array)
   {
-    int size= array.size();
+    int size = array.size();
     const int s2 = size / 2;
 
     for (int i = 0; i < s2; i++)
@@ -192,12 +190,12 @@ namespace PlotMM {
     array[0] = xmin;
     array[imax] = xmax;
 
-    const double step = (xmax - xmin) / double(imax);
+    const double step = (xmax - xmin) / static_cast<double>(imax);
     const double tiny = 1e-6;
 
     for (int i = 1; i < imax; i++)
     {
-      array[i] = xmin + double(i) * step;
+      array[i] = xmin + static_cast<double>(i) * step;
       if (fabs(array[i]) < tiny * fabs(step))
         array[i] = step * floor(array[i] / step + tiny / 2);
     }
@@ -212,22 +210,21 @@ namespace PlotMM {
     */
   void log_space(double *array, int size, double xmin, double xmax)
   {
-    if ((xmin <= 0.0) || (xmax <= 0.0) || (size <= 0))
+    if ((xmin <= 0.0) || (xmax <= 0.0) || (size <= 0) || array == nullptr)
       return;
 
-    const int imax = size -1;
+    const int imax = size - 1;
 
     array[0] = xmin;
     array[imax] = xmax;
 
     const double lxmin = log(xmin);
     const double lxmax = log(xmax);
-    const double lstep = (lxmax - lxmin) / double(imax);
+    const double lstep = (lxmax - lxmin) / static_cast<double>(imax);
 
     for (int i = 1; i < imax; i++)
-      array[i] = exp(lxmin + double(i) * lstep);
+      array[i] = exp(lxmin + static_cast<double>(i) * lstep);
   }
-
 
   /*!
     \brief Create an array of equally spaced values
@@ -280,7 +277,5 @@ namespace PlotMM {
     for (int i = 0; i < size; ++i)
       array.push_back(c[i]);
   }
-
-
 
 } // namespace PlotMM

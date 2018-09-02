@@ -6,90 +6,12 @@
  * modify it under the terms of the LGPL
  *****************************************************************************/
 /* ported from qwt */
-
-#ifndef PLOTMM_MATH_H
-#define PLOTMM_MATH_H
+#pragma once
 
 #include <vector>
 #include <math.h>
 
 namespace PlotMM {
-
-  // #ifndef LOG10_2
-  // #define LOG10_2     0.30102999566398119802  /* log10(2) */
-  // #endif
-
-  // #ifndef LOG10_3
-  // #define LOG10_3     0.47712125471966243540  /* log10(3) */
-  // #endif
-
-  // #ifndef LOG10_5
-  // #define LOG10_5     0.69897000433601885749  /* log10(5) */
-  // #endif
-
-  // #ifndef M_2PI
-  // #define M_2PI       6.28318530717958623200  /* 2 pi */
-  // #endif
-
-  // #ifndef LOG_MIN
-  // #define LOG_MIN 1.0e-100
-  // #endif
-
-  // #ifndef LOG_MAX
-  // #define LOG_MAX 1.0e100
-  // #endif
-
-  // #ifndef M_E
-  // #define M_E            2.7182818284590452354   /* e */
-  // #endif
-
-  // #ifndef M_LOG2E
-  // #define M_LOG2E 1.4426950408889634074   /* log_2 e */
-  // #endif
-
-  // #ifndef M_LOG2E
-  // #define M_LOG10E    0.43429448190325182765  /* log_10 e */
-  // #endif
-
-  // #ifndef M_LN2
-  // #define M_LN2       0.69314718055994530942  /* log_e 2 */
-  // #endif
-
-  // #ifndef M_LN10
-  // #define M_LN10         2.30258509299404568402  /* log_e 10 */
-  // #endif
-
-  // #ifndef M_PI
-  // #define M_PI        3.14159265358979323846  /* pi */
-  // #endif
-
-  // #ifndef M_PI_2
-  // #define M_PI_2      1.57079632679489661923  /* pi/2 */
-  // #endif
-
-  // #ifndef M_PI_4
-  // #define M_PI_4      0.78539816339744830962  /* pi/4 */
-  // #endif
-
-  // #ifndef M_1_PI
-  // #define M_1_PI      0.31830988618379067154  /* 1/pi */
-  // #endif
-
-  // #ifndef M_2_PI
-  // #define M_2_PI      0.63661977236758134308  /* 2/pi */
-  // #endif
-
-  // #ifndef M_2_SQRTPI
-  // #define M_2_SQRTPI  1.12837916709551257390  /* 2/sqrt(pi) */
-  // #endif
-
-  // #ifndef M_SQRT2
-  // #define M_SQRT2 1.41421356237309504880  /* sqrt(2) */
-  // #endif
-
-  // #ifndef M_SQRT1_2
-  // #define M_SQRT1_2   0.70710678118654752440  /* 1/sqrt(2) */
-  // #endif
 
   double ceil_125(double x);
   double floor_125(double x);
@@ -104,37 +26,26 @@ namespace PlotMM {
   void log_space(std::vector<double>&,int size,double xmin,double xmax);
   void vector_from_c(std::vector<double> &array,const double *c, int size);
 
-// #ifndef MAX
-// #define MAX(a,b) ((b) < (a) ? (a) : (b))
-// #endif
-// #ifndef MIN
-// #define MIN(a,b) ((a) < (b) ? (a) : (b))
-// #endif
-// #ifndef ABS
-// #define ABS(a) ((a) >= 0 ? (a) : -(a))
-// #endif
-
   extern const double LogMin;
   extern const double LogMax;
 
   inline int iround( double d )
-  { //TODO: Tidy this stuff up.
-    // return d >= 0.0 ? 
-    //   int(d + 0.5) : 
-    //   int( d - ((int)d-1) + 0.5 ) + ((int)d-1);
+  {
     return static_cast<int> (round( d ));
   }
 
-  //! Return the sign
+  /*! Return the sign of the input parameter.
+   *
+   * \param x the value to be checked.
+   * \return an integer value: 1 if x is positive, -1 if x is negative and
+   *         0 if x is zero.
+   */
   template <class T>
     inline int SIGN(const T& x)
     {
-      if (x > T(0))
-        return 1;
-      else if (x < T(0))
-        return (-1);
-      else
-        return 0;
+      const T Zero = static_cast<T>(0.0);
+
+      return (x > Zero) ? 1 : (x < Zero) ? -1 : 0;
     }            
 
   /*! Copy an array into another
@@ -147,7 +58,7 @@ namespace PlotMM {
     void copy_array(T *dest, T *src, int n) 
     {
       int i;
-      for (i=0; i<n;i++ )
+      for (i = 0; i < n; i++ )
         dest[i] = src[i];
     }
 
@@ -212,22 +123,5 @@ namespace PlotMM {
              (val < val_min) ? val_min :
              val;
     }
-  /*
-     inline Gdk::Point polar_to_position(const Gdk::Point &center,
-     double radius, double angle)
-     {
-     const double x = center.get_x() + radius * cos(angle);
-     const double y = center.get_y() - radius * sin(angle);
 
-     return Gdk::Point(iround(x), iround(y));
-     }
-
-     inline Gdk::Point degree_to_position(const Gdk::Point &center,
-     double radius, double angle)
-     {
-     return polar_to_position(center, radius, angle / 180.0 * M_PI);
-     }
-     */
 } // namespace PlotMM
-
-#endif
