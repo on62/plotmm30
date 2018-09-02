@@ -31,13 +31,13 @@ namespace PlotMM {
 // #define M_2PI       6.28318530717958623200  /* 2 pi */
 // #endif
 
-#ifndef LOG_MIN
-#define LOG_MIN 1.0e-100
-#endif
+// #ifndef LOG_MIN
+// #define LOG_MIN 1.0e-100
+// #endif
 
-#ifndef LOG_MAX
-#define LOG_MAX 1.0e100
-#endif
+// #ifndef LOG_MAX
+// #define LOG_MAX 1.0e100
+// #endif
 
 // #ifndef M_E
 // #define M_E            2.7182818284590452354   /* e */
@@ -114,6 +114,9 @@ namespace PlotMM {
 #define ABS(a) ((a) >= 0 ? (a) : -(a))
 #endif
 
+  extern const double LogMin;
+  extern const double LogMax;
+
   inline int iround( double d )
   { //TODO: Tidy this stuff up.
     // return d >= 0.0 ? 
@@ -122,7 +125,13 @@ namespace PlotMM {
     return static_cast<int> (round( d ));
   }
 
-
+  template <class T>
+  inline T limit_value(T val, T val_max, T val_min)
+  {
+     return (val > val_max) ? val_max :
+            (val < val_min) ? val_min :
+            val;
+  }
 
   //! Return the sign 
   template <class T>

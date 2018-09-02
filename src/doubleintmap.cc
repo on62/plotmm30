@@ -7,12 +7,12 @@
  *****************************************************************************/
 /* ported from qwt */
 
+#include <algorithm>
+
+#include "supplemental.h"
 #include "doubleintmap.h"
 
 namespace PlotMM {
-
-  const double DoubleIntMap::LogMin = 1.0e-150;
-  const double DoubleIntMap::LogMax = 1.0e150;
 
   /*!
     \brief Constructor
@@ -45,7 +45,7 @@ namespace PlotMM {
       double d1, double d2, bool logarithmic)
   {
     d_log = logarithmic;
-    set_int_range(i1,i2);
+    set_int_range(i1, i2);
     set_dbl_range(d1, d2);
   }
 
@@ -63,7 +63,7 @@ namespace PlotMM {
     */
   bool DoubleIntMap::contains(double x) const
   {
-    return ( (x >= MIN(d_x1, d_x2)) && (x <= MAX(d_x1, d_x2)));
+    return ( (x >= std::min(d_x1, d_x2)) && (x <= std::max(d_x1, d_x2)));
   }
 
   /*!
@@ -73,7 +73,7 @@ namespace PlotMM {
     */
   bool DoubleIntMap::contains(int x) const
   {
-    return ( (x >= MIN(d_y1, d_y2)) && (x <= MAX(d_y1, d_y2)));
+    return ( (x >= std::min(d_y1, d_y2)) && (x <= std::max(d_y1, d_y2)));
   }
 
   /*!
@@ -87,15 +87,8 @@ namespace PlotMM {
     if (lg)
     {
       d_log = true;
-      if (d1 < LogMin)
-        d1 = LogMin;
-      else if (d1 > LogMax)
-        d1 = LogMax;
-
-      if (d2 < LogMin)
-        d2 = LogMin;
-      else if (d2 > LogMax)
-        d2 = LogMax;
+      d1 = limit_value(d1, PlotMM::LogMax, PlotMM::LogMin);
+      d2 = limit_value(d2, PlotMM::LogMax, PlotMM::LogMin);
 
       d_x1 = log(d1);
       d_x2 = log(d2);
@@ -151,10 +144,10 @@ namespace PlotMM {
     */
   int DoubleIntMap::lim_transform(double x) const
   {
-    if ( x > MAX(d_x1, d_x2) )
-      x = MAX(d_x1, d_x2);
-    else if ( x < MIN(d_x1, d_x2))
-      x = MIN(d_x1, d_x2);
+    if ( x > std::max(d_x1, d_x2) )
+      x = std::max(d_x1, d_x2);
+    else if ( x < std::min(d_x1, d_x2))
+      x = std::min(d_x1, d_x2);
     return transform(x);
   }
 

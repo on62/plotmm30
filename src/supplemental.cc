@@ -12,6 +12,10 @@
 using namespace PlotMM;
 
 namespace PlotMM {
+
+  const double LogMin = 1.0e-150;
+  const double LogMax = 1.0e150;
+
 /*!
   \brief Find the smallest value in an array
   \param array Pointer to an array

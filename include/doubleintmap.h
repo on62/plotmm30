@@ -7,8 +7,7 @@
  *****************************************************************************/
 /* ported from qwt */
 
-#ifndef PLOTMM_DBLINTMAP_H
-#define PLOTMM_DBLINTMAP_H
+#pragma once
 
 #include <cmath>
 #include "supplemental.h"
@@ -142,5 +141,3 @@ namespace PlotMM {
   };
 
 } //namespace PlotMM
-
-#endif
