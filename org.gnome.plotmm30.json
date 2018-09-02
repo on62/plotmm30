@@ -1,6 +1,6 @@
 {
-    "app-id" : "org.gnome.plotmm30",
-    "runtime" : "org.gnome.Platform",
+    "app-id" : "org.gnome.plotmm",
+    "runtime" : "org.gnome.Sdk",
     "runtime-version" : "3.28",
     "sdk" : "org.gnome.Sdk",
     "command" : "plotmm",
@@ -137,7 +137,7 @@
             "sources" : [
                 {
                     "type" : "git",
-                    "url" : "file:///home/tony/Projects/plotmm30"
+                    "url" : "file://~/Projects/plotmm30"
                 }
             ]
         }

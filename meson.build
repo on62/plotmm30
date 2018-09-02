@@ -1,8 +1,10 @@
 project('plotmm30', ['cpp', 'c'],
   version: '0.1.0',
   license: 'lgpl2',
-  meson_version: '>= 0.40.0',
+  meson_version: '>= 0.46.0',
 )
+
+i18n = import('i18n')
 
 #glib_dep = dependency('glib-2.0')
 prefix = get_option('prefix')
@@ -20,9 +22,7 @@ plotmm_deps = [
 subdir('include')
 subdir('src')
 
-
-#doc_lib = library('plotmm', plotmm_sources, include_directories: plotmm_incdir)
-
+# Build the libraries (shared and static)
 plotmm30_lib = both_libraries(
                    'plotmm30', plotmm_sources,
                    dependencies: plotmm_deps,
@@ -30,6 +30,7 @@ plotmm30_lib = both_libraries(
                    install: true
                  )
 
+# Generate the pkgconfig file 'plotmm30.pc'
 pkg_mod.generate(
     libraries : plotmm30_lib,
     subdirs: headers,
@@ -39,24 +40,20 @@ pkg_mod.generate(
     filebase : 'plotmm30',
     description: 'A 2D graph plotting library for gtkmm30'
 )
-subdir('demo')                 
-                 
+
 doxygen = find_program('doxygen', required : false)
 #if not doxygen.found()
 #  error('MESON_SKIP_TEST doxygen not found.')
 #endif
 
-cdata = configuration_data()
-cdata.set('VERSION', meson.project_version())
-
-if find_program('dot', required : false).found()
-  # In the real world this would set the variable
-  # to YES. However we set it to NO so that the
-  # list of generated files is always the same
-  # so tests always pass.
-  cdata.set('HAVE_DOT', 'YES')
-else
-  cdata.set('HAVE_DOT', 'NO')
+# Build the demo applications (if build_demos = true, see meson_options.txt)
+if get_option ('build_demos')
+  subdir('demo')
 endif
 
-#subdir('doc')
+# Build the documentatin (if docs = true, see meson_options.txt)
+if get_option ('docs')
+  subdir('doc')
+endif
+
+meson.add_install_script('build-aux/meson/postinstall.py')

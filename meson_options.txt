@@ -1,0 +1,2 @@
+option('docs', type : 'boolean', value : false)
+option('build_demos', type : 'boolean', value : true)
