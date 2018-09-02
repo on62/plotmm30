@@ -145,7 +145,9 @@ namespace PlotMM {
       virtual void set_symbol(const Glib::RefPtr<Symbol> &s);
       virtual Glib::RefPtr<Symbol> symbol() const;
       //first parameter below is changed from const Glib::RefPtr<Gdk::Drawable> &p
-      virtual void draw(const Cairo::RefPtr<Cairo::Context> &cr, const Glib::RefPtr<Gdk::Window> p,
+      virtual void draw(
+          const Cairo::RefPtr<Cairo::Context> &cr,
+          const Glib::RefPtr<Gdk::Window> p,
           const DoubleIntMap &xMap, const DoubleIntMap &yMap,
           int from = 0, int to = -1);
 

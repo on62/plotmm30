@@ -125,15 +125,7 @@ namespace PlotMM {
     return static_cast<int> (round( d ));
   }
 
-  template <class T>
-    inline T limit_value(T val, T val_max, T val_min)
-    {
-      return (val > val_max) ? val_max :
-        (val < val_min) ? val_min :
-        val;
-    }
-
-  //! Return the sign 
+  //! Return the sign
   template <class T>
     inline int SIGN(const T& x)
     {
@@ -198,29 +190,27 @@ namespace PlotMM {
       }
     }
 
-  /*! Limit a value to fit into a specified interval
+  /*! Limit a value to fit into a specified interval.
+   *  This template is agnostic with respect to the
+   *  order of the bounds. It does require the
+   *  greater/less than operators to be defined for
+   *  the data type 'T'.
    *
    *  \param x Input value
    *  \param x1 First interval boundary
    *  \param x2 Second interval boundary  
    */
   template <class T>
-    T value_limes(const T& x, const T& x1, const T& x2)
+    inline T value_limits(const T& val, const T& bound1, const T& bound2)
     {
-      T rv;
-      T xmin, xmax;
+      T val_min, val_max;
 
-      xmin = MIN(x1, x2);
-      xmax = MAX(x1, x2);
+      val_min = std::min(bound1, bound2);
+      val_max = std::max(bound1, bound2);
 
-      if ( x < xmin )
-        rv = xmin;
-      else if ( x > xmax )
-        rv = xmax;
-      else
-        rv = x;
-
-      return rv;
+      return (val > val_max) ? val_max :
+             (val < val_min) ? val_min :
+             val;
     }
   /*
      inline Gdk::Point polar_to_position(const Gdk::Point &center,

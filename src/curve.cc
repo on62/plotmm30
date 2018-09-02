@@ -253,10 +253,11 @@ namespace PlotMM {
   {
     int size = data_size();
 
-    if (size < 1) return 0;
+    if (size < 1)
+      return 0;
 
-    i1 = value_limes(i1, 0, size - 1);
-    i2 = value_limes(i2, 0, size - 1);
+    i1 = value_limits(i1, 0, size - 1);
+    i2 = value_limits(i2, 0, size - 1);
     sort_values(i1, i2, i1, i2);
 
     return (i2 - i1 + 1);
@@ -358,7 +359,7 @@ namespace PlotMM {
     xi = xMap.transform(x(from));
     yi = xMap.transform(y(from));
 
-    cr->move_to(xMap.transform(x(from)),yMap.transform(y(from)));
+    cr->move_to(xMap.transform(x(from)), yMap.transform(y(from)));
     for (int i = from; i <= to; i++)
     {
 

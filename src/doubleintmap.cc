@@ -87,8 +87,8 @@ namespace PlotMM {
     if (lg)
     {
       d_log = true;
-      d1 = limit_value(d1, LogMax, LogMin);
-      d2 = limit_value(d2, LogMax, LogMin);
+      d1 = value_limits(d1, LogMax, LogMin);
+      d2 = value_limits(d2, LogMax, LogMin);
 
       d_x1 = log(d1);
       d_x2 = log(d2);

@@ -248,8 +248,8 @@ namespace PlotMM {
     majStep = std::abs(majStep);
 
     // boundary check
-    range_limits(d_hBound, LOG_MIN, LOG_MAX);
-    range_limits(d_lBound, LOG_MIN, LOG_MAX);
+    range_limits(d_hBound, LogMin, LogMax);
+    range_limits(d_lBound, LogMin, LogMax);
 
     // detach arrays
     majMarks_.clear();
