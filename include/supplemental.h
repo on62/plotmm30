@@ -104,15 +104,15 @@ namespace PlotMM {
   void log_space(std::vector<double>&,int size,double xmin,double xmax);
   void vector_from_c(std::vector<double> &array,const double *c, int size);
 
-#ifndef MAX
-#define MAX(a,b) ((b) < (a) ? (a) : (b))
-#endif
-#ifndef MIN
-#define MIN(a,b) ((a) < (b) ? (a) : (b))
-#endif
-#ifndef ABS
-#define ABS(a) ((a) >= 0 ? (a) : -(a))
-#endif
+// #ifndef MAX
+// #define MAX(a,b) ((b) < (a) ? (a) : (b))
+// #endif
+// #ifndef MIN
+// #define MIN(a,b) ((a) < (b) ? (a) : (b))
+// #endif
+// #ifndef ABS
+// #define ABS(a) ((a) >= 0 ? (a) : -(a))
+// #endif
 
   extern const double LogMin;
   extern const double LogMax;

@@ -5,9 +5,7 @@
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the LGPL
  *****************************************************************************/
-
-#ifndef PLOTMM_RECTANGLE_H
-#define PLOTMM_RECTANGLE_H
+#pragma once
 
 #include <gdkmm/rectangle.h>
 
@@ -21,7 +19,7 @@ namespace PlotMM {
       Rectangle() 
         : Gdk::Rectangle() {}
       Rectangle(int x, int y, int width, int height)
-        : Gdk::Rectangle(x,y,width,height) {}
+        : Gdk::Rectangle(x, y, width,height) {}
 
       //! Returns rectangle's lowest x
       inline int get_x_min() const
@@ -62,19 +60,24 @@ namespace PlotMM {
       {
         int h = get_height(); 
         return h < 0 ? -h : h; 
-
       }
 
       //! Set rectangle by specifying one corner and with/height
       inline void set_rect(int x, int y, int width, int height)
       {
-        set_x(x); set_y(y); set_width(width); set_height(height);     
+        set_x(x);
+        set_y(y);
+        set_width(width);
+        set_height(height);
       }
 
       //! Set two opposing corners
       inline void set_points(int x1, int y1, int x2, int y2)
       {
-        set_x(x1); set_y(y1); set_width(x2 - x1); set_height(y2 - y1);
+        set_x(x1);
+        set_y(y1);
+        set_width(x2 - x1);
+        set_height(y2 - y1);
       }
 
       //! Set one of two opposing corners
@@ -82,7 +85,6 @@ namespace PlotMM {
       {
         set_x(x);
         set_y(y);
-
       }
 
       //! Set the other of two opposing corners 
@@ -94,5 +96,3 @@ namespace PlotMM {
   };
 
 }  //namespace PlotMM
-
-#endif // PLOT_RECTANGLE_H

@@ -28,7 +28,7 @@ namespace PlotMM {
 
     double rv = array[0];
     for (int i = 1; i < size; i++)
-      rv = MIN(rv, array[i]);
+      rv = std::min(rv, array[i]);
 
     return rv;
   }
@@ -46,7 +46,7 @@ namespace PlotMM {
 
     double rv = array[0];
     for (int i = 1; i < size; i++)
-      rv = MAX(rv, array[i]);
+      rv = std::max(rv, array[i]);
 
     return rv;
   }
@@ -68,7 +68,7 @@ namespace PlotMM {
     const double p10 = floor(lx);
 
     double fr = pow(10.0, lx - p10);
-    if (fr <=1.0)
+    if (fr <= 1.0)
       fr = 1.0;
     else if (fr <= 2.0)
       fr = 2.0;
@@ -129,7 +129,7 @@ namespace PlotMM {
     int rv = SIGN(array[1] - array[0]);
     for (int i = 1; i < size - 1; i++)
     {
-      if ( SIGN(array[i+1] - array[i]) != rv )
+      if ( SIGN(array[i + 1] - array[i]) != rv )
       {
         rv = 0;
         break;
@@ -147,7 +147,7 @@ namespace PlotMM {
   {
     const int s2 = size / 2;
 
-    for (int i=0; i < s2; i++)
+    for (int i = 0; i < s2; i++)
     {
       const int itmp = size - 1 - i;
       const double dtmp = array[i];
@@ -164,9 +164,9 @@ namespace PlotMM {
   void twist_array(std::vector<double> &array)
   {
     int size= array.size();
-    const int s2 = size/ 2;
+    const int s2 = size / 2;
 
-    for (int i=0; i < s2; i++)
+    for (int i = 0; i < s2; i++)
     {
       const int itmp = size - 1 - i;
       const double dtmp = array[i];
@@ -198,8 +198,8 @@ namespace PlotMM {
     for (int i = 1; i < imax; i++)
     {
       array[i] = xmin + double(i) * step;
-      if (fabs(array[i]) < tiny*fabs(step))
-        array[i] = step*floor(array[i]/step + tiny/2);
+      if (fabs(array[i]) < tiny * fabs(step))
+        array[i] = step * floor(array[i] / step + tiny / 2);
     }
   }
 
@@ -239,10 +239,11 @@ namespace PlotMM {
   void lin_space(std::vector<double> &array_, int size,
       double xmin, double xmax)
   {
-    if (size<1) return;
+    if (size < 1)
+      return;
     double array[size];
-    lin_space(array,size,xmin,xmax);
-    vector_from_c(array_,array,size);
+    lin_space(array, size, xmin, xmax);
+    vector_from_c(array_, array, size);
   }
 
   /*!
@@ -255,10 +256,12 @@ namespace PlotMM {
   void log_space(std::vector<double> &array_, int size,
       double xmin, double xmax)
   {
-    if (size<1) return;
+    if (size < 1)
+      return;
+
     double array[size];
-    log_space(array,size,xmin,xmax);
-    vector_from_c(array_,array,size);
+    log_space(array, size, xmin, xmax);
+    vector_from_c(array_, array, size);
   }
 
   /*!
@@ -271,8 +274,10 @@ namespace PlotMM {
   void vector_from_c(std::vector<double> &array,const double *c, int size)
   {
     array.clear();
-    if (size<1) return;
-    for (int i=0; i<size; ++i)
+    if (size < 1)
+      return;
+
+    for (int i = 0; i < size; ++i)
       array.push_back(c[i]);
   }
 
